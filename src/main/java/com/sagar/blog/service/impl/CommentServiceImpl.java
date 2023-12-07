@@ -1,8 +1,10 @@
 package com.sagar.blog.service.impl;
 
+import java.lang.management.ManagementPermission;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +21,11 @@ import com.sagar.blog.service.CommentService;
 public class CommentServiceImpl implements CommentService{
 	private CommentRespository commentRepository;
 	private PostRepository postRepository;
-	
-	public CommentServiceImpl(CommentRespository commentRespository, PostRepository postRepository) {
+	private ModelMapper mapper;
+	public CommentServiceImpl(CommentRespository commentRespository, PostRepository postRepository, ModelMapper mapper) {
 		this.commentRepository = commentRespository;
 		this.postRepository = postRepository;
+		this.mapper = mapper;
 	}
 	
 	@Override
@@ -68,19 +71,21 @@ public class CommentServiceImpl implements CommentService{
 	}
 	
 	private CommentDto mapToDto(Comment comment) {
-		CommentDto commentDto = new CommentDto();
-		commentDto.setId(comment.getId());
-		commentDto.setBody(comment.getBody());
-		commentDto.setName(comment.getName());
-		commentDto.setEmail(comment.getEmail());
+		CommentDto commentDto = mapper.map(comment, CommentDto.class);
+//		CommentDto commentDto = new CommentDto();
+//		commentDto.setId(comment.getId());
+//		commentDto.setBody(comment.getBody());
+//		commentDto.setName(comment.getName());
+//		commentDto.setEmail(comment.getEmail());
 		return commentDto;
 	}
 	
 	private Comment mapToEntity(CommentDto commentDto) {
-		Comment comment = new Comment();
-		comment.setBody(commentDto.getBody());
-		comment.setName(commentDto.getName());
-		comment.setEmail(commentDto.getEmail());
+		Comment comment = mapper.map(commentDto, Comment.class);
+//		Comment comment = new Comment();
+//		comment.setBody(commentDto.getBody());
+//		comment.setName(commentDto.getName());
+//		comment.setEmail(commentDto.getEmail());
 		return comment;
 	}
 	
